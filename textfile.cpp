@@ -17,7 +17,7 @@ char * textFileRead(string fn) {
 	FILE *fp;
 	char *content = NULL;
 
-	int count=0;
+	size_t count=0;
 
 	fp = fopen(fn.c_str(),"rt");
 

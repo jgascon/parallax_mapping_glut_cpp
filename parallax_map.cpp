@@ -33,6 +33,8 @@ GLuint number_lod_iterations;
 int global_last_x;
 int global_last_y;
 
+bool draw_wireframe = false;
+
 
 
 void textured_quad(GLuint texture_descriptor0, GLuint texture_descriptor1) {
@@ -340,7 +342,7 @@ int main(int argc, char **argv) {
     glUniform1i(texLoc, DiffuseMap);
 
     GLint shader_param = glGetUniformLocation(program, "depth_factor");
-    glUniform1f(shader_param, 0.3);
+    glUniform1f(shader_param, 0.03f);
 
     shader_param = glGetUniformLocation(program, "number_lod_iterations");
     glUniform1i(shader_param, 16);
@@ -355,7 +357,7 @@ int main(int argc, char **argv) {
     glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
 
     GLfloat ambientLight[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-    GLfloat diffuseLight[] = { 0.8f, 0.8f, 0.8, 1.0f };
+    GLfloat diffuseLight[] = { 0.8f, 0.8f, 0.8f, 1.0f };
     GLfloat specularLight[] = { 0.5f, 0.5f, 0.5f, 1.0f };
 
     glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);

@@ -18,22 +18,8 @@ uniform sampler2D DiffuseMap;
 uniform float depth_factor;
 uniform int number_lod_iterations;
 
-/*
-    Este método recibe estos dos vectores y el mapa de normales.
 
-    p = (u, v, 0.0, 1.0)
 
-    v = (dot(V, tangent) * depth_factor / dot(normal, -V),
-        dot(V, binormal) * depth_factor / dot(normal, -V),
-        1.0 )
-
-    V: el un vector unitario que va desde el centro de la cámara, situada en el
-       origen (0,0,0) del espacio de cámara hasta el último vértice analizado,
-       como es una variable varying, se va interpolando de un vértice al siguiente.
-
-    Al final lo que nos devuelve son dos coordenadas de textura nuevas, que 
-    son las que se usarán para coger el punto de color y el vector de normal.
-*/
 void ray_intersect(sampler2D reliefMap, inout vec4 p, inout vec3 v) {
     v /= float(number_lod_iterations);
 
@@ -47,7 +33,7 @@ void ray_intersect(sampler2D reliefMap, inout vec4 p, inout vec3 v) {
         }
     }
 
-    float f = (pp.w - pp.z) / (p.z - pp.z - p.w + pp.w);
+    float f = (pp.w - pp.z) / (p.z - p.w + pp.w - pp.z);
     p = mix(pp, p, f);
 }
 
@@ -65,7 +51,6 @@ void main() {
     vec2 uv = p.xy;
     vec4 diffuse_tex = texture2D(DiffuseMap, uv);
     vec3 normal_tex = texture2D(NormalMap, uv).rgb * 2.0 - 1.0;
-    normal_tex.z = sqrt(1.0 - dot(normal_tex.xy, normal_tex.xy));
 
     normal_tex = normalize(normal_tex.x * tangent +
                            normal_tex.y * binormal +
@@ -77,10 +62,3 @@ void main() {
 
     gl_FragColor = color;
 }
-
-
-
-
-
-
-

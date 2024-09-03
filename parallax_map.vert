@@ -1,4 +1,3 @@
-
 attribute vec3 external_tangent;
 varying vec3 lightDir;
 
@@ -29,9 +28,3 @@ void main() {
 
     gl_Position = ftransform();
 }
-
-
-
-
-
-

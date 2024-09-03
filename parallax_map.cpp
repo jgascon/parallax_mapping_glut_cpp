@@ -79,30 +79,18 @@ void textured_quad(GLuint texture_descriptor0, GLuint texture_descriptor1) {
 
 
 void wireframe_quad() {
-    glActiveTexture(GL_TEXTURE1);
-    glDisable(GL_TEXTURE_2D);
-    glActiveTexture(GL_TEXTURE2);
-    glDisable(GL_TEXTURE_2D);
-    //glActiveTexture(GL_TEXTURE2);
-    glPushMatrix();
-        glColor4f (1.0, 1.0, 1.0, 1.0);
-        glLineWidth(2.0);
-        //Triangle
-        glBegin(GL_LINE_STRIP);
-            glVertex3f(-2.0f, -2.0f, 0.0f);
+    glColor4f (1.0, 1.0, 1.0, 1.0);
+    glLineWidth(2.0);
 
-            glVertex3f(2.0f, -2.0f, 0.0f);
-
-            glVertex3f(2.0f, 2.0f, 0.0f);
-
-            glVertex3f(-2.0f, 2.0f, 0.0f);
-
-            glVertex3f(-2.0f, -2.0f, 0.0f);
-
-            glVertex3f(2.0f, 2.0f, 0.0f);
-        glEnd();
-        glLineWidth(1.0);
-    glPopMatrix();
+    glBegin(GL_LINE_STRIP);
+        glVertex3f(-2.0f, -2.0f, 0.0f);
+        glVertex3f(2.0f, -2.0f, 0.0f);
+        glVertex3f(2.0f, 2.0f, 0.0f);
+        glVertex3f(-2.0f, 2.0f, 0.0f);
+        glVertex3f(-2.0f, -2.0f, 0.0f);
+        glVertex3f(2.0f, 2.0f, 0.0f);
+    glEnd();
+    glLineWidth(1.0);
 }
 
 
@@ -160,9 +148,7 @@ void renderScene(void) {
         glUseProgram(0);
         glDisable(GL_LIGHTING);
         glDisable(GL_TEXTURE_2D);
-        glPushMatrix();
-            wireframe_quad();
-        glPopMatrix();
+        wireframe_quad();
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_LIGHTING);
         glutSwapBuffers();
@@ -333,10 +319,10 @@ int main(int argc, char **argv) {
     glClearColor(0.0, 0.0, 0.0, 1.0);
     //glEnable(GL_CULL_FACE);
 
-    NormalMap = loadTexture("../../images/earth_parallax.png");
-    DiffuseMap = loadTexture("../../images/earth.png");
+    NormalMap = loadTexture("../images/earth_parallax.png");
+    DiffuseMap = loadTexture("../images/earth.png");
 
-    setShaders("../../parallax_map.vert", "../../parallax_map.frag");
+    setShaders("../parallax_map.vert", "../parallax_map.frag");
 
     GLuint texLoc = glGetUniformLocation(program, "NormalMap");
     glUniform1i(texLoc, NormalMap);
@@ -345,7 +331,7 @@ int main(int argc, char **argv) {
     glUniform1i(texLoc, DiffuseMap);
 
     GLint shader_param = glGetUniformLocation(program, "depth_factor");
-    glUniform1f(shader_param, 0.03);
+    glUniform1f(shader_param, 0.3);
 
     shader_param = glGetUniformLocation(program, "number_lod_iterations");
     glUniform1i(shader_param, 16);

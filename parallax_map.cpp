@@ -8,6 +8,7 @@
 #include <stdlib.h>
 
 #define GL_GLEXT_PROTOTYPES
+#include <GL/glew.h>
 #include <GL/glut.h>
 #include "textfile.h"
 #include <iostream>
@@ -20,7 +21,7 @@ static float LIGHT_MOVE_OFFSET = 0.5;
 
 using namespace std;
 
-bool draw_wireframe = false;
+const string BASE_PATH = "../..";
 GLuint program;
 float light_pos[4] = {0.0, 0.0, 1.0, 0.0};
 GLuint DiffuseMap;
@@ -114,7 +115,7 @@ GLuint loadTexture(string filename) {
         //SDL_Quit();
         return 0;
     }
-}
+} //GLuint loadTexture(string filename)
 
 
 
@@ -124,7 +125,7 @@ void changeSize(int w, int h) {
     if(h == 0)
         h = 1;
 
-    float ratio = 1.0 * w / h;
+    float ratio = 1.0f * w / h;
 
     // Reset the coordinate system before modifying
     glMatrixMode(GL_PROJECTION);
@@ -135,7 +136,7 @@ void changeSize(int w, int h) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glTranslatef(0.0, 0.0, -5.0);
-}
+} //void changeSize(int w, int h)
 
 
 
@@ -173,7 +174,7 @@ void renderScene(void) {
     glPointSize(1.0);
 
     glutSwapBuffers();
-}
+} //void renderScene(void)
 
 
 
@@ -202,12 +203,12 @@ void processNormalKeys(unsigned char key, int x, int y) {
     printf("Light position (%f %f %f)\n",light_pos[0], light_pos[1], light_pos[2]);
     glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
     glutPostRedisplay();
-}
+} //void processNormalKeys(unsigned char key, int x, int y)
 
 
 
 void setShaders(string vertex_shader_filename, string fragment_shader_filename) {
-    GLsizei LogLength = 500;
+    const GLsizei LogLength = 500;
     GLchar compilationLog[LogLength];
     GLsizei lengthObtained;
 
@@ -239,7 +240,7 @@ void setShaders(string vertex_shader_filename, string fragment_shader_filename) 
 
     glLinkProgram(program);
     glUseProgram(program);
-}
+} //void setShaders(string vertex_shader_filename, string fragment_shader_filename)
 
 
 
@@ -253,8 +254,9 @@ static void mouseMotion(int x, int y) {
     static float center_y = 0.0f;
     static float center_z = 0.0f;
 
-    rotation_x += (y - global_last_y) * 0.3;
-    rotation_y += (x - global_last_x) * 0.3;
+    //Rotating the camera around our scene.
+    rotation_x += (y - global_last_y) * 0.3f;
+    rotation_y += (x - global_last_x) * 0.3f;
 
     if (rotation_y > 60.0f) {
         rotation_y = 60.0f;
@@ -281,23 +283,30 @@ static void mouseMotion(int x, int y) {
     global_last_x = x;
     global_last_y = y;
     glutPostRedisplay();
-}
+} //static void mouseMotion(int x, int y)
 
 
 
 static void clickMouse(int button, int state, int x, int y) {
     global_last_x = x;
     global_last_y = y;
-}
+} //static void clickMouse(int button, int state, int x, int y)
 
 
 
 int main(int argc, char **argv) {
+    cout << "Starting" << endl;
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
     glutInitWindowPosition(100,100);
     glutInitWindowSize(500,500);
     glutCreateWindow("Parallax Mapping");
+
+    GLenum err = glewInit();
+    if (err != GLEW_OK) {
+        cout << "ERROR: GLEW" << endl;
+        exit(1);
+    }
 
     glutDisplayFunc(renderScene);
 
@@ -319,10 +328,10 @@ int main(int argc, char **argv) {
     glClearColor(0.0, 0.0, 0.0, 1.0);
     //glEnable(GL_CULL_FACE);
 
-    NormalMap = loadTexture("../images/earth_parallax.png");
-    DiffuseMap = loadTexture("../images/earth.png");
+    NormalMap = loadTexture(BASE_PATH + "/images/earth_parallax.png");
+    DiffuseMap = loadTexture(BASE_PATH + "/images/earth.png");
 
-    setShaders("../parallax_map.vert", "../parallax_map.frag");
+    setShaders(BASE_PATH + "/parallax_map.vert", BASE_PATH + "/parallax_map.frag");
 
     GLuint texLoc = glGetUniformLocation(program, "NormalMap");
     glUniform1i(texLoc, NormalMap);
@@ -356,5 +365,5 @@ int main(int argc, char **argv) {
     glutMainLoop();
 
     return 0;
-}
+} //int main(int argc, char **argv)
 

@@ -21,7 +21,7 @@ static float LIGHT_MOVE_OFFSET = 0.5;
 
 using namespace std;
 
-const string BASE_PATH = "../..";
+const string BASE_PATH = "..";
 GLuint program;
 float light_pos[4] = {0.0, 0.0, 1.0, 0.0};
 GLuint DiffuseMap;
